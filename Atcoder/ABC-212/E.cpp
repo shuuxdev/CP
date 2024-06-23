@@ -1,62 +1,44 @@
-        #include <dbg.h>
-        #include <bits/stdc++.h>
-        #ifdef LOCAL
-        #include "LOCAL/debug.h"
-        #else
-        #define debug(...)
-        #endif
-        using namespace std;
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+long long dp[5002];
+long long dp2[5002];
+int main()
+{
+    int n, m, k;
+    int mo = 998244353;
+    cin >> n >> m >> k;
+    vector<vector<int>> road(n + 1);
+    for (int i = 0; i < m; ++i)
+    {
+        int x, y;
+        cin >> x >> y;
+        road[x].push_back(y);
+        road[y].push_back(x);
+    }
+    dp[1] = 1LL;
 
-        #define FOR(i,a,b) for (int i = (a); i < (b); ++i)
-        #define F0R(i,a) FOR(i,0,a)
-        #define ROF(i,a,b) for (int i = (b)-1; i >= (a); --i)
-        #define R0F(i,a) ROF(i,0,a)
-        #define rep(a) F0R(_,a)
-        #define each(a,x) for (auto& a: x)
-         
-        #define sz(x) int((x).size())
-        #define bg(x) begin(x)
-        #define all(x) bg(x), end(x)
-        #define rall(x) x.rbegin(), x.rend() 
-        #define sor(x) sort(all(x)) 
-        #define rsz resize
-        #define ins insert 
-        #define pb push_back
-        #define eb emplace_back
-        #define ft front()
-        #define bk back()
-         
-        #define lb lower_bound
-        #define ub upper_bound
-         void dbg_io(){
-            freopen("test_in.txt", "r",stdin);
-            freopen("output.txt", "w",stdout);
-            
+    for (int i = 1; i <= k; ++i)
+    {
+        ll sum = 0;
+        for (int j = 1; j <= n; ++j)
+        {
+            sum += dp[j];
         }
-        void io(){
-            #ifndef ONLINE_JUDGE
-            freopen("input.txt", "r",stdin);
-            freopen("output.txt", "w",stdout);
-            #endif        
+        for (int j = 1; j <= n; ++j)
+        {
+            dp2[j] = sum - dp[j];
+            for (int l = 0; l < road[j].size(); ++l)
+            {
+                dp2[j] -= dp[road[j][l]];
+            }
+            dp2[j] %= mo;
         }
-        size_t mem = 0;
-        void* operator new (size_t size){mem+=size;return malloc(size);} 
 
-        using ull = unsigned long long;
-        using ll = long long;
-         
-        void solve() {    
-            int n;
-            cin >> n;
-            
-     
+        for (int j = 1; j <= n; ++j)
+        {
+            dp[j] = dp2[j];
         }
-        int main() {
-            io();
-            ios::sync_with_stdio(0);
-            int t;
-            cin >> t;
-            FOR(i,1,t+1)
-                solve();
-            return 0;
-        }
+    }
+    cout << dp[1];
+}
